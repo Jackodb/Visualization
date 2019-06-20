@@ -39,18 +39,18 @@ app.layout = html.Div(className='wrapper',children=[
             data=[
                 go.Bar(
                     x=[i for i in range(len(list(df.Price)))],
-                    y=list(df.Mountain_neutral_view),
-                    name='Initial',
-                    marker=go.bar.Marker(
-                        color=bar_background_colors_initial
-                    )
-                ),
-                go.Bar(
-                    x=[i for i in range(len(list(df.Price)))],
                     y=list(df.Current),
                     name='Current',
                     marker=go.bar.Marker(
                         color=bar_background_colors_current
+                    )
+                ),
+                go.Bar(
+                    x=[i for i in range(len(list(df.Price)))],
+                    y=list(df.Mountain_neutral_view),
+                    name='Initial',
+                    marker=go.bar.Marker(
+                        color=bar_background_colors_initial
                     )
                 )
             ],
