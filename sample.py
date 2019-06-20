@@ -55,8 +55,14 @@ app.layout = html.Div(className='wrapper',children=[
                 )
             ],
             layout=go.Layout(
-                xaxis={'title':'BTS/USD'},
-                yaxis={'title':'Order size'},
+                xaxis=dict(
+                    title='BTS/USD',
+                    zerolinecolor='rgba(153,153,153,0.2)'
+                ),
+                yaxis=dict(
+                    title='Order size',
+                    gridcolor='rgba(153,153,153,0.2)'
+                ),
                 barmode='stack',
                 plot_bgcolor='rgb(21,43,42)',
                 paper_bgcolor='rgb(21,43,42)',
