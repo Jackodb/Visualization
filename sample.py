@@ -14,8 +14,21 @@ app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
 
 df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
 
-# If you want to get an interval, so not all values on the x-axis, you need to
-# say for example: range(9) and find the corresponding price for every value in that range
+bar_background_colors_initial = []
+bar_background_colors_current = []
+
+for i in df.Price:
+    i = round(i,3)
+    if i < 1:
+        bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
+        bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
+    else:
+        if i == 1:
+            bar_background_colors_initial.append('rgba(217,217,217,0.5)')
+            bar_background_colors_current.append('rgba(242,242,242,0.9)')
+        else:
+            bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
+            bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
 
 app.layout = html.Div(className='wrapper',children=[
     html.H1(children='Staggered Orders Overview'),
@@ -29,7 +42,7 @@ app.layout = html.Div(className='wrapper',children=[
                     y=list(df.Mountain_neutral_view),
                     name='Initial',
                     marker=go.bar.Marker(
-                        color='rgba(217,217,217,0.5)'
+                        color=bar_background_colors_initial
                     )
                 ),
                 go.Bar(
@@ -37,7 +50,7 @@ app.layout = html.Div(className='wrapper',children=[
                     y=list(df.Current),
                     name='Current',
                     marker=go.bar.Marker(
-                        color='rgba(242,242,242,0.9)'
+                        color=bar_background_colors_current
                     )
                 )
             ],
