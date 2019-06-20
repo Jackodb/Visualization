@@ -10,7 +10,7 @@ import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__)
 
 df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
 
@@ -30,7 +30,7 @@ for i in df.Price:
             bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
             bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
 
-app.layout = html.Div(className='wrapper',children=[
+app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
     html.H1(children='Staggered Orders Overview'),
     html.H2(children='A mountain based visualisation of (base asset/quote asset)'),
 
@@ -40,7 +40,7 @@ app.layout = html.Div(className='wrapper',children=[
                 go.Bar(
                     x=[i for i in range(len(list(df.Price)))],
                     y=list(df.Current),
-                    name='Current',
+                    name='Buy',
                     marker=go.bar.Marker(
                         color=bar_background_colors_current
                     )
@@ -48,13 +48,14 @@ app.layout = html.Div(className='wrapper',children=[
                 go.Bar(
                     x=[i for i in range(len(list(df.Price)))],
                     y=list(df.Mountain_neutral_view),
-                    name='Initial',
+                    name='Sell',
                     marker=go.bar.Marker(
                         color=bar_background_colors_initial
                     )
                 )
             ],
             layout=go.Layout(
+                autosize=True,
                 xaxis=dict(
                     title='BTS/USD',
                     zerolinecolor='rgba(153,153,153,0.2)'
@@ -70,7 +71,8 @@ app.layout = html.Div(className='wrapper',children=[
                     'color':'white'
                 }
             )
-        )
+        ),
+        style={'height':'100%','width':'60vw','display':'inline-block'}
     )
 ])
 
