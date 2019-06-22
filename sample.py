@@ -14,6 +14,10 @@ app = dash.Dash(__name__)
 
 df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
 
+print(list(df.Price))
+print(list(df.Mountain_neutral_view))
+print(list(df.Current))
+
 bar_background_colors_initial = []
 bar_background_colors_current = []
 
@@ -76,5 +80,4 @@ app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
     )
 ])
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+app.run_server(debug=True)
