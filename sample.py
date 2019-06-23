@@ -39,7 +39,7 @@ app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
 
 # VALUES ALSO GET SUBMITTED ON PAGE REFRESH: https://github.com/plotly/dash/issues/162
 def update_figure(n_clicks, input1,input2):
-    if not input1 == '': # This seems to prevent the above problem
+    if not input1 == '': # This seems to partially prevent the above problem
         current.append(input1)
         mountain.append(input2)
     for i in price:
