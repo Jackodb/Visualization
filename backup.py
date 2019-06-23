@@ -1,0 +1,41 @@
+    dcc.Graph(
+        id='my-figure',
+        figure=go.Figure(
+            data=[
+                go.Bar(
+                    x=[i for i in range(len(list(df.Price)))],
+                    y=list(df.Current),
+                    name='Buy',
+                    marker=go.bar.Marker(
+                        color=bar_background_colors_current
+                    )
+                ),
+                go.Bar(
+                    x=[i for i in range(len(list(df.Price)))],
+                    y=list(df.Mountain_neutral_view),
+                    name='Sell',
+                    marker=go.bar.Marker(
+                        color=bar_background_colors_initial
+                    )
+                )
+            ],
+            layout=go.Layout(
+                autosize=True,
+                xaxis=dict(
+                    title='BTS/USD',
+                    zerolinecolor='rgba(153,153,153,0.2)'
+                ),
+                yaxis=dict(
+                    title='Order size',
+                    gridcolor='rgba(153,153,153,0.2)'
+                ),
+                barmode='stack',
+                plot_bgcolor='rgb(21,43,42)',
+                paper_bgcolor='rgb(21,43,42)',
+                font={
+                    'color':'white'
+                }
+            )
+        ),
+        style={'height':'100%','width':'60vw','display':'inline-block'}
+    )

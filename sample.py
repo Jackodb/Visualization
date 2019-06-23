@@ -10,13 +10,7 @@ import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__)
-
 df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
-
-print(list(df.Price))
-print(list(df.Mountain_neutral_view))
-print(list(df.Current))
 
 bar_background_colors_initial = []
 bar_background_colors_current = []
@@ -34,11 +28,26 @@ for i in df.Price:
             bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
             bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
 
+app = dash.Dash(__name__)
+
 app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
     html.H1(children='Staggered Orders Overview'),
     html.H2(children='A mountain based visualisation of (base asset/quote asset)'),
 
-    dcc.Graph(
+    html.Div(children='''DEXBot visualisation '''),
+    dcc.Input(id='input', value='', type='text'),
+    html.Div(id='output-figure')
+
+])
+
+
+@app.callback(
+    Output(component_id='output-figure', component_property='children'),
+    [Input(component_id='input', component_property='value')]
+)
+def update_figure(input_value):
+    return dcc.Graph(
+        id='my-figure',
         figure=go.Figure(
             data=[
                 go.Bar(
@@ -78,6 +87,5 @@ app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
         ),
         style={'height':'100%','width':'60vw','display':'inline-block'}
     )
-])
-
-app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run_server(debug=True)
