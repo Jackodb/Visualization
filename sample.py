@@ -1,7 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -15,52 +15,62 @@ df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
 bar_background_colors_initial = []
 bar_background_colors_current = []
 
-for i in df.Price:
-    i = round(i,3)
-    if i < 1:
-        bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
-        bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
-    else:
-        if i == 1:
-            bar_background_colors_initial.append('rgba(217,217,217,0.5)')
-            bar_background_colors_current.append('rgba(242,242,242,0.9)')
-        else:
-            bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
-            bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
+current = list(df.Current)
+price = list(df.Price)
+mountain = list(df.Mountain_neutral_view)
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
     html.H1(children='Staggered Orders Overview'),
     html.H2(children='A mountain based visualisation of (base asset/quote asset)'),
 
-    html.Div(children='''DEXBot visualisation '''),
-    dcc.Input(id='input', value='', type='text'),
+    dcc.Input(id='input1', type='text',value=''),
+    dcc.Input(id='input2', type='text',value=''),
+    html.Button(id='submit-button', n_clicks=0, children='Submit'),
     html.Div(id='output-figure')
 
 ])
 
+@app.callback(Output('output-figure','children'),
+                    [Input('submit-button', 'n_clicks')],
+                    [State('input1', 'value'),
+                    State('input2', 'value')])
 
-@app.callback(
-    Output(component_id='output-figure', component_property='children'),
-    [Input(component_id='input', component_property='value')]
-)
-def update_figure(input_value):
+# VALUES ALSO GET SUBMITTED ON PAGE REFRESH: https://github.com/plotly/dash/issues/162
+def update_figure(n_clicks, input1,input2):
+    if not input1 == '': # This seems to prevent the above problem
+        current.append(input1)
+        mountain.append(input2)
+    for i in price:
+        i = round(i,3)
+        if i < 1:
+            bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
+            bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
+        else:
+            if i == 1:
+                bar_background_colors_initial.append('rgba(217,217,217,0.5)')
+                bar_background_colors_current.append('rgba(242,242,242,0.9)')
+            else:
+                bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
+                bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
+    print(current,mountain)
+
     return dcc.Graph(
         id='my-figure',
         figure=go.Figure(
             data=[
                 go.Bar(
-                    x=[i for i in range(len(list(df.Price)))],
-                    y=list(df.Current),
+                    x=[i for i in range(len(price))],
+                    y=current,
                     name='Buy',
                     marker=go.bar.Marker(
                         color=bar_background_colors_current
                     )
                 ),
                 go.Bar(
-                    x=[i for i in range(len(list(df.Price)))],
-                    y=list(df.Mountain_neutral_view),
+                    x=[i for i in range(len(price))],
+                    y=mountain,
                     name='Sell',
                     marker=go.bar.Marker(
                         color=bar_background_colors_initial
