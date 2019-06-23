@@ -38,18 +38,22 @@ def update_figure(n_clicks, input1,input2):
     bar_background_colors_initial = []
     bar_background_colors_current = []
 
-    mountain_dict = {}
+    initial_dict = {}
     current_dict = {}
     for x,y,z in zip(df.Price,df.Mountain_neutral_view,df.Current):
-        mountain_dict[round(x,3)]=y
+        initial_dict[round(x,3)]=y
         current_dict[round(x,3)]=z
 
     if input1 is not None: # NEEDS TO BE ADDED: if not input1 == ''
-        # print(current_dict[float(input1)])
         input_price = float(input1)
-        current_dict[input_price] += float(input2)
+        if input_price in list(initial_dict.keys()):
+            # print(current_dict[float(input1)])
+            current_dict[input_price] += float(input2)
+            initial_dict[input_price] -= float(input2)
+        else:
+            print('error')
 
-    for item in mountain_dict:
+    for item in initial_dict:
         item = round(item,3)
         if item < 1:
             bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
@@ -62,6 +66,8 @@ def update_figure(n_clicks, input1,input2):
                 bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
                 bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
 
+    print(list(current_dict.values()))
+
     data=[
         go.Bar(
             x=[i for i in range(len(list(df.Price)))], # length of the dict (len(dict))
@@ -73,7 +79,7 @@ def update_figure(n_clicks, input1,input2):
         ),
         go.Bar(
             x=[i for i in range(len(list(df.Price)))], # length of the dict
-            y=list(mountain_dict.values()), # all values from mountain_dict
+            y=list(initial_dict.values()), # all values from mountain_dict
             name='Sell',
             marker=go.bar.Marker(
                 color=bar_background_colors_initial
