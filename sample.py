@@ -15,10 +15,6 @@ df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
 bar_background_colors_initial = []
 bar_background_colors_current = []
 
-current = list(df.Current)
-price = list(df.Price)
-mountain = list(df.Mountain_neutral_view)
-
 app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
@@ -37,11 +33,15 @@ app.layout = html.Div(className='wrapper',style={'height':'80vh'},children=[
                     [State('input1', 'value'),
                     State('input2', 'value')])
 
-# VALUES ALSO GET SUBMITTED ON PAGE REFRESH: https://github.com/plotly/dash/issues/162
 def update_figure(n_clicks, input1,input2):
-    if not input1 == '': # This seems to partially prevent the above problem
+    current = list(df.Current)
+    price = list(df.Price)
+    mountain = list(df.Mountain_neutral_view)
+
+    if not input1 == '':
         current.append(input1)
         mountain.append(input2)
+
     for i in price:
         i = round(i,3)
         if i < 1:
@@ -54,29 +54,32 @@ def update_figure(n_clicks, input1,input2):
             else:
                 bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
                 bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
-    print(current,mountain)
+    #print(current,'\n',mountain)
+
+    data=[
+        go.Bar(
+            x=[i for i in range(len(price))],
+            y=current,
+            name='Buy',
+            marker=go.bar.Marker(
+                color=bar_background_colors_current
+            )
+        ),
+        go.Bar(
+            x=[i for i in range(len(price))],
+            y=mountain,
+            name='Sell',
+            marker=go.bar.Marker(
+                color=bar_background_colors_initial
+            )
+        )
+    ]
+    print(data)
 
     return dcc.Graph(
         id='my-figure',
         figure=go.Figure(
-            data=[
-                go.Bar(
-                    x=[i for i in range(len(price))],
-                    y=current,
-                    name='Buy',
-                    marker=go.bar.Marker(
-                        color=bar_background_colors_current
-                    )
-                ),
-                go.Bar(
-                    x=[i for i in range(len(price))],
-                    y=mountain,
-                    name='Sell',
-                    marker=go.bar.Marker(
-                        color=bar_background_colors_initial
-                    )
-                )
-            ],
+            data=data,
             layout=go.Layout(
                 autosize=True,
                 xaxis=dict(
