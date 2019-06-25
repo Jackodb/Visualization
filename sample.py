@@ -51,18 +51,11 @@ def update_figure(n_clicks, input1,input2):
             # print(current_dict[float(input1)])
             current_dict[input_price] += float(input2)
             initial_dict[input_price] -= float(input2)
-        else:
-            print('error')
-
-        for item in initial_dict:
-            item = round(item,3)
-            if item < 1:
-                bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
-                bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
-            else:
-                if item == 1:
-                    bar_background_colors_initial.append('rgba(217,217,217,0.5)')
-                    bar_background_colors_current.append('rgba(242,242,242,0.9)')
+            for item in initial_dict:
+                item = round(item,3)
+                if item < 1:
+                    bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
+                    bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
                 else:
                     if item == 1:
                         bar_background_colors_initial.append('rgba(217,217,217,0.5)')
