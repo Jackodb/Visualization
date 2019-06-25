@@ -44,7 +44,8 @@ def update_figure(n_clicks, input1,input2):
         initial_dict[round(x,3)]=y
         current_dict[round(x,3)]=z
 
-    if input1 is not None: # NEEDS TO BE ADDED: if not input1 == ''
+    if not input1 in [None,'']:
+    # input1 is not None and not '': # NEEDS TO BE ADDED: if not input1 == ''
         input_price = float(input1)
         if input_price in list(initial_dict.keys()):
             # print(current_dict[float(input1)])
@@ -53,65 +54,65 @@ def update_figure(n_clicks, input1,input2):
         else:
             print('error')
 
-    for item in initial_dict:
-        item = round(item,3)
-        if item < 1:
-            bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
-            bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
-        else:
-            if item == 1:
-                bar_background_colors_initial.append('rgba(217,217,217,0.5)')
-                bar_background_colors_current.append('rgba(242,242,242,0.9)')
+        for item in initial_dict:
+            item = round(item,3)
+            if item < 1:
+                bar_background_colors_initial.append('rgba(58, 98, 87, 0.5)')
+                bar_background_colors_current.append('rgba(51, 204, 51, 0.9)')
             else:
-                bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
-                bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
+                if item == 1:
+                    bar_background_colors_initial.append('rgba(217,217,217,0.5)')
+                    bar_background_colors_current.append('rgba(242,242,242,0.9)')
+                else:
+                    bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
+                    bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
 
-    print(list(current_dict.values()))
+        print(list(current_dict.values()))
 
-    data=[
-        go.Bar(
-            x=[i for i in range(len(list(df.Price)))], # length of the dict (len(dict))
-            y=list(current_dict.values()), # all values from current_dict
-            name='Buy',
-            marker=go.bar.Marker(
-                color=bar_background_colors_current
+        data=[
+            go.Bar(
+                x=[i for i in range(len(list(df.Price)))], # length of the dict (len(dict))
+                y=list(current_dict.values()), # all values from current_dict
+                name='Buy',
+                marker=go.bar.Marker(
+                    color=bar_background_colors_current
+                )
+            ),
+            go.Bar(
+                x=[i for i in range(len(list(df.Price)))], # length of the dict
+                y=list(initial_dict.values()), # all values from mountain_dict
+                name='Sell',
+                marker=go.bar.Marker(
+                    color=bar_background_colors_initial
+                )
             )
-        ),
-        go.Bar(
-            x=[i for i in range(len(list(df.Price)))], # length of the dict
-            y=list(initial_dict.values()), # all values from mountain_dict
-            name='Sell',
-            marker=go.bar.Marker(
-                color=bar_background_colors_initial
-            )
+        ]
+        #print(data)
+
+        return dcc.Graph(
+            id='my-figure',
+            figure=go.Figure(
+                data=data,
+                layout=go.Layout(
+                    autosize=True,
+                    xaxis=dict(
+                        title='BTS/USD',
+                        zerolinecolor='rgba(153,153,153,0.2)'
+                    ),
+                    yaxis=dict(
+                        title='Order size',
+                        gridcolor='rgba(153,153,153,0.2)'
+                    ),
+                    barmode='stack',
+                    plot_bgcolor='rgb(21,43,42)',
+                    paper_bgcolor='rgb(21,43,42)',
+                    font={
+                        'color':'white'
+                    }
+                )
+            ),
+            style={'height':'100%','width':'60vw','display':'inline-block'}
         )
-    ]
-    #print(data)
-
-    return dcc.Graph(
-        id='my-figure',
-        figure=go.Figure(
-            data=data,
-            layout=go.Layout(
-                autosize=True,
-                xaxis=dict(
-                    title='BTS/USD',
-                    zerolinecolor='rgba(153,153,153,0.2)'
-                ),
-                yaxis=dict(
-                    title='Order size',
-                    gridcolor='rgba(153,153,153,0.2)'
-                ),
-                barmode='stack',
-                plot_bgcolor='rgb(21,43,42)',
-                paper_bgcolor='rgb(21,43,42)',
-                font={
-                    'color':'white'
-                }
-            )
-        ),
-        style={'height':'100%','width':'60vw','display':'inline-block'}
-    )
 
 if __name__ == '__main__':
     app.run_server(debug=True)
