@@ -64,55 +64,61 @@ def update_figure(n_clicks, input1,input2):
                     bar_background_colors_initial.append('rgba(217,217,217,0.5)')
                     bar_background_colors_current.append('rgba(242,242,242,0.9)')
                 else:
-                    bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
-                    bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
+                    if item == 1:
+                        bar_background_colors_initial.append('rgba(217,217,217,0.5)')
+                        bar_background_colors_current.append('rgba(242,242,242,0.9)')
+                    else:
+                        bar_background_colors_initial.append('rgba(230, 0, 0, 0.5)')
+                        bar_background_colors_current.append('rgba(255, 0, 0, 0.9)')
 
-        print(list(current_dict.values()))
+            print(list(current_dict.values()))
 
-        data=[
-            go.Bar(
-                x=[i for i in range(len(list(df.Price)))], # length of the dict (len(dict))
-                y=list(current_dict.values()), # all values from current_dict
-                name='Buy',
-                marker=go.bar.Marker(
-                    color=bar_background_colors_current
+            data=[
+                go.Bar(
+                    x=[i for i in range(len(list(df.Price)))], # length of the dict (len(dict))
+                    y=list(current_dict.values()), # all values from current_dict
+                    name='Buy',
+                    marker=go.bar.Marker(
+                        color=bar_background_colors_current
+                    )
+                ),
+                go.Bar(
+                    x=[i for i in range(len(list(df.Price)))], # length of the dict
+                    y=list(initial_dict.values()), # all values from mountain_dict
+                    name='Sell',
+                    marker=go.bar.Marker(
+                        color=bar_background_colors_initial
+                    )
                 )
-            ),
-            go.Bar(
-                x=[i for i in range(len(list(df.Price)))], # length of the dict
-                y=list(initial_dict.values()), # all values from mountain_dict
-                name='Sell',
-                marker=go.bar.Marker(
-                    color=bar_background_colors_initial
-                )
+            ]
+            #print(data)
+
+            return dcc.Graph(
+                id='my-figure',
+                figure=go.Figure(
+                    data=data,
+                    layout=go.Layout(
+                        autosize=True,
+                        xaxis=dict(
+                            title='BTS/USD',
+                            zerolinecolor='rgba(153,153,153,0.2)'
+                        ),
+                        yaxis=dict(
+                            title='Order size',
+                            gridcolor='rgba(153,153,153,0.2)'
+                        ),
+                        barmode='stack',
+                        plot_bgcolor='rgb(21,43,42)',
+                        paper_bgcolor='rgb(21,43,42)',
+                        font={
+                            'color':'white'
+                        }
+                    )
+                ),
+                style={'height':'100%','width':'60vw','display':'inline-block'}
             )
-        ]
-        #print(data)
-
-        return dcc.Graph(
-            id='my-figure',
-            figure=go.Figure(
-                data=data,
-                layout=go.Layout(
-                    autosize=True,
-                    xaxis=dict(
-                        title='BTS/USD',
-                        zerolinecolor='rgba(153,153,153,0.2)'
-                    ),
-                    yaxis=dict(
-                        title='Order size',
-                        gridcolor='rgba(153,153,153,0.2)'
-                    ),
-                    barmode='stack',
-                    plot_bgcolor='rgb(21,43,42)',
-                    paper_bgcolor='rgb(21,43,42)',
-                    font={
-                        'color':'white'
-                    }
-                )
-            ),
-            style={'height':'100%','width':'60vw','display':'inline-block'}
-        )
+        else:
+            print('PLEASE INSERT AN EXISTING PRICE')
 
 if __name__ == '__main__':
     app.run_server(debug=True)
