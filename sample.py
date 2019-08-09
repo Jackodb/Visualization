@@ -1,3 +1,9 @@
+# # total_ticks = int(len(price_list))*0.2
+# tick_interval = int(len(price_list))/(int(len(price_list))*0.2)
+# # for i in range(len(price_list)):
+# #     print(i)
+# print([price_list[i] for i in range(1, len(price_list), int(tick_interval))])
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -11,10 +17,6 @@ import pandas as pd
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 df = pd.read_csv('test.csv',usecols=['Price','Mountain_neutral_view','Current'])
-
-# current = list(df.Current)
-# price = list(df.Price)
-# mountain = list(df.Mountain_neutral_view)
 
 app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
 
@@ -43,6 +45,8 @@ def update_figure(n_clicks, input1,input2):
     for x,y,z in zip(df.Price,df.Mountain_neutral_view,df.Current):
         initial_dict[round(x,3)]=y
         current_dict[round(x,3)]=z
+
+    print(initial_dict.keys())
 
     if not input1 in [None,'']:
     # input1 is not None and not '': # NEEDS TO BE ADDED: if not input1 == ''
